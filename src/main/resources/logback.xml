@@ -1,0 +1,20 @@
+<configuration>
+    <!-- Console that should not be used in production -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %green([%thread]) %highlight(%level) %logger{25} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>500</queueSize>
+        <appender-ref ref="CONSOLE"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <logger name="akka" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC_CONSOLE"/>
+    </root>
+</configuration>
