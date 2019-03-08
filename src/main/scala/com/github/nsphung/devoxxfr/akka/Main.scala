@@ -2,17 +2,21 @@ package com.github.nsphung.devoxxfr.akka
 
 import java.lang.management.ManagementFactory
 
+import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.japi.function.Function
 import akka.stream.Supervision.Directive
-import akka.stream.{ActorMaterializer, Supervision}
+import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.{ActorAttributes, ActorMaterializer, Supervision}
 import com.github.nsphung.devoxxfr.akka.models.JsonImplicits._
 import com.github.nsphung.devoxxfr.akka.models.{Feature, MyRandom}
 import com.github.nsphung.devoxxfr.akka.services.ScalaClient
 import io.circe.syntax._
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.duration._
+import scala.util.control.NonFatal
 
 object Main extends App {
   println("Hello ! This is Reactive Jammed Architecture Demo !")
@@ -37,7 +41,8 @@ object Main extends App {
     Supervision.stop
   }
 
-  /*
+  val wsClient = StandaloneAhcWSClient()
+
   Source.repeat(NotUsed)
     .map(_ => MyRandom.generateLine())
     .filter(_ => generationActivation.getActive)
@@ -48,13 +53,13 @@ object Main extends App {
         "\n"
       }
     })
-    // -- for debug purpose
-    .alsoTo(Sink.foreach(println(_)))
+    .mapAsync(10)(e => {
+      println("========= BEGIN ====")
+      println(e)
+      ScalaClient.call(wsClient)
+    })
     .withAttributes(ActorAttributes.withSupervisionStrategy(streamDecider))
     .runWith(Sink.ignore)
-*/
-  val wsClient = StandaloneAhcWSClient()
-  ScalaClient.call(wsClient)
 
   /*
   last.recover {
