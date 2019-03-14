@@ -16,7 +16,7 @@ object ScalaClient {
     wsClient.url(MOCK_URL).get().map { response ⇒
       val statusText: String = response.statusText
       val body = response.body[String]
-      println(s"Got a response $statusText with body $body")
+      //println(s"Got a response $statusText with body $body")
       1
     }
   }
