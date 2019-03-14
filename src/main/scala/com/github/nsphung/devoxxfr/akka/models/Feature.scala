@@ -23,6 +23,6 @@ trait FeatureMBean {
 class Feature(@BeanProperty var active: Boolean) extends FeatureMBean
 
 object Feature {
-  val JMX_FEATURE_PREFIX: String = "com.sncf.houston.hcc:type=Features,subtype="
+  val JMX_FEATURE_PREFIX: String = "reactive.jammed.architecture:type=Features,subtype="
   val LOGGER = LoggerFactory.getLogger(Feature.getClass)
 }

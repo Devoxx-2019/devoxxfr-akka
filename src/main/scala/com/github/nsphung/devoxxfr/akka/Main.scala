@@ -15,8 +15,8 @@ import com.github.nsphung.devoxxfr.akka.services.{Metrics, ScalaClient}
 import io.circe.syntax._
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.util.control.NonFatal
 
 object Main extends App {
@@ -24,7 +24,7 @@ object Main extends App {
 
   // Init Metrics
   Metrics.startMetrics()
-  val requests: Meter = Metrics.metricRegistry.meter("requests")
+  private val inputsMeter: Meter = Metrics.metricRegistry.meter("inputs")
 
   implicit val system: ActorSystem = ActorSystem.create()
   implicit val materializer: ActorMaterializer = ActorMaterializer.create(system)
@@ -40,6 +40,8 @@ object Main extends App {
   val mBeanServer = ManagementFactory.getPlatformMBeanServer
   val generationActivation = new Feature(true)
   generationActivation.registerBean(mBeanServer, generationActivation, "GenerationActivation")
+  val useWS = new Feature(true)
+  useWS.registerBean(mBeanServer, useWS, "UseWS")
 
   val streamDecider: Function[Throwable, Directive] = (e: Throwable) => {
     println(s"Decider: ${e.getMessage}", e)
@@ -58,13 +60,17 @@ object Main extends App {
         "\n"
     })
     .map(e => {
-      requests.mark()
+      inputsMeter.mark()
       e
     })
     .mapAsync(10)(e => {
       //println("========= BEGIN ====")
       //println(e)
-      ScalaClient.call(wsClient)
+      if (useWS.getActive) {
+        ScalaClient.call(wsClient)
+      } else {
+        Future.successful(0)
+      }
     })
     .withAttributes(ActorAttributes.withSupervisionStrategy(streamDecider))
     .runWith(Sink.ignore)
