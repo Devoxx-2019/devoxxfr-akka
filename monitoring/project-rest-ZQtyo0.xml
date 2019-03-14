@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<restExportContainer>
+    <applications>
+        <application>
+            <id>1xiNEd</id>
+            <name>akka</name>
+            <projectId>ZQtyo0</projectId>
+            <resources/>
+        </application>
+    </applications>
+    <methods>
+        <method>
+            <currentResponseSequenceIndex>0</currentResponseSequenceIndex>
+            <defaultMockResponseId></defaultMockResponseId>
+            <forwardedEndpoint></forwardedEndpoint>
+            <httpMethod>GET</httpMethod>
+            <id>BWTIpp</id>
+            <mockResponses/>
+            <name>ticket</name>
+            <networkDelay>30</networkDelay>
+            <resourceId>h0Sq6s</resourceId>
+            <responseStrategy>RANDOM</responseStrategy>
+            <simulateNetworkDelay>true</simulateNetworkDelay>
+            <status>MOCKED</status>
+        </method>
+    </methods>
+    <mockResponses>
+        <mockResponse>
+            <body>{&#13;
+	"message": "toto"&#13;
+}</body>
+            <contentEncodings/>
+            <httpHeaders/>
+            <httpStatusCode>200</httpStatusCode>
+            <id>4ynE3M</id>
+            <jsonPathExpressions/>
+            <methodId>BWTIpp</methodId>
+            <name>toto response</name>
+            <parameterQueries/>
+            <status>ENABLED</status>
+            <usingExpressions>false</usingExpressions>
+            <xpathExpressions/>
+        </mockResponse>
+    </mockResponses>
+    <project>
+        <description></description>
+        <id>ZQtyo0</id>
+        <name>DevoxxFr</name>
+        <applications/>
+    </project>
+    <resources>
+        <resource>
+            <applicationId>1xiNEd</applicationId>
+            <id>h0Sq6s</id>
+            <methods/>
+            <name>toto</name>
+            <uri>/toto</uri>
+        </resource>
+    </resources>
+</restExportContainer>
