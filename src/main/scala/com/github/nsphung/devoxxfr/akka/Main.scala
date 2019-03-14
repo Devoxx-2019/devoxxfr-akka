@@ -1,8 +1,6 @@
 package com.github.nsphung.devoxxfr.akka
 
 import java.lang.management.ManagementFactory
-import java.net.InetSocketAddress
-import java.util.concurrent.TimeUnit
 
 import akka.NotUsed
 import akka.actor.ActorSystem
@@ -10,11 +8,10 @@ import akka.japi.function.Function
 import akka.stream.Supervision.Directive
 import akka.stream.scaladsl.{Sink, Source}
 import akka.stream.{ActorAttributes, ActorMaterializer, Supervision}
-import com.codahale.metrics.graphite.{Graphite, GraphiteReporter}
-import com.codahale.metrics.{ConsoleReporter, Meter, MetricFilter, MetricRegistry}
+import com.codahale.metrics.Meter
 import com.github.nsphung.devoxxfr.akka.models.JsonImplicits._
 import com.github.nsphung.devoxxfr.akka.models.{Feature, MyRandom}
-import com.github.nsphung.devoxxfr.akka.services.ScalaClient
+import com.github.nsphung.devoxxfr.akka.services.{Metrics, ScalaClient}
 import io.circe.syntax._
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
@@ -25,11 +22,9 @@ import scala.util.control.NonFatal
 object Main extends App {
   println("Hello ! This is Reactive Jammed Architecture Demo !")
 
-  // Init Graphite
-  private val metrics = new MetricRegistry()
-  startConsoleReporter(metrics)
-  startGraphiteReporter(metrics)
-  val requests: Meter = metrics.meter("requests")
+  // Init Metrics
+  Metrics.startMetrics()
+  val requests: Meter = Metrics.metricRegistry.meter("requests")
 
   implicit val system: ActorSystem = ActorSystem.create()
   implicit val materializer: ActorMaterializer = ActorMaterializer.create(system)
@@ -77,25 +72,7 @@ object Main extends App {
   sys.addShutdownHook({
     wsClient.close()
     system.terminate()
+    Metrics.closeMetrics()
     println("========> Application terminated")
   })
-
-  def startConsoleReporter(metricRegistry: MetricRegistry): Unit = {
-    val reporter: ConsoleReporter = ConsoleReporter
-      .forRegistry(metricRegistry)
-      .convertRatesTo(TimeUnit.SECONDS)
-      .convertDurationsTo(TimeUnit.MILLISECONDS)
-      .build
-    reporter.start(5, TimeUnit.SECONDS)
-  }
-
-  def startGraphiteReporter(metricRegistry: MetricRegistry): Unit = {
-    val graphite: Graphite = new Graphite(new InetSocketAddress("localhost", 2003))
-    val reporter: GraphiteReporter = GraphiteReporter.forRegistry(metricRegistry)
-      .prefixedWith("reactive.jammed.architecture")
-      .convertRatesTo(TimeUnit.SECONDS)
-      .convertDurationsTo(TimeUnit.MILLISECONDS)
-      .build(graphite)
-    reporter.start(1, TimeUnit.SECONDS)
-  }
 }
