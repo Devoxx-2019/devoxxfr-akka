@@ -61,26 +61,6 @@ object Main extends App {
     .withAttributes(ActorAttributes.withSupervisionStrategy(streamDecider))
     .runWith(Sink.ignore)
 
-  /*
-  last.recover {
-    case NonFatal(ex) =>
-      println(s"======> Future recover : $ex", ex)
-  }
-
-  last.onComplete {
-    case Success(e) => {
-      println(s"==========> last Success: $e")
-      killSwitch.shutdown()
-      system.terminate()
-    }
-    case Failure(e) => {
-      println(s"==========> last Failure: $e", e)
-      println(s"Unexpected error in graph ! => Failed Graph")
-      system.terminate()
-    }
-  }
-  */
-
   sys.addShutdownHook({
     wsClient.close()
     system.terminate()
