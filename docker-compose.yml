@@ -4,7 +4,6 @@ services:
     image: grafana/grafana
     container_name: grafana
     hostname: grafana
-    restart: always
     ports:
       - 3000:3000
     volumes:
@@ -14,7 +13,6 @@ services:
     image: graphiteapp/graphite-statsd
     container_name: graphite
     hostname: graphite
-    restart: always
     ports:
       - 80:80
       - 2003-2004:2003-2004
@@ -23,6 +21,17 @@ services:
       - 8125:8125/udp
       - 8126:8126
 
+  castlemock:
+    image: castlemock/castlemock
+    container_name: castlemock
+    hostname: castlemock
+    ports:
+      - 8888:8080
+    volumes:
+      - castlemock-volume
+
 volumes:
   grafana-volume:
+    driver: local
+  castlemock-volume:
     driver: local

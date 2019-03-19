@@ -3,7 +3,7 @@
 ## Docker
 
 * Run Castle Mock: `docker run -d -p 8888:8080 castlemock/castlemock`
-* Access the mock at: `http://localhost:8080/castlemock`
+* Access the mock at: `http://localhost:8888/castlemock`
 
 # Graphite Grafana Setup
 
