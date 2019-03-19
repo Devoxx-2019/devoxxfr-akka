@@ -58,6 +58,7 @@ object Main extends App {
       case NonFatal(ex) =>
         println(s"======> Flow recovered : $ex", ex)
         "\n"
+        System.exit(1)
     })
     .map(e => {
       inputsMeter.mark()
