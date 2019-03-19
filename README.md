@@ -2,14 +2,17 @@
 
 ## Docker
 
-* Run Castle Mock: `docker run -d -p 8888:8080 castlemock/castlemock`
+* Run docker-compose: `docker-compose up -d`
 * Access the mock at: `http://localhost:8888/castlemock`
 
-# Graphite Grafana Setup
+# Graphite/Grafana
 
-* Use docker-compose in monitoring/
 * Graphite: http://localhost
 * Grafana: http://localhost:3000
+
+# How to start
+
+* Run the main.scala file
 
 Source: 
 * https://graphite.readthedocs.io/en/latest/install.html 
