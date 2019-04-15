@@ -34,7 +34,7 @@ object Metrics {
     .build(pickledGraphite)
 
   private def startConsoleReporter(): Unit = {
-    consoleReporter.start(5, TimeUnit.SECONDS)
+    //consoleReporter.start(5, TimeUnit.SECONDS)
   }
 
   private def startGraphiteReporter(): Unit = {
